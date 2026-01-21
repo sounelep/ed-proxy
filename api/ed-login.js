@@ -1,16 +1,19 @@
 export default async function handler(req, res) {
+  // CORS headers
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+
+  // Réponse à la requête préliminaire OPTIONS
   if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     return res.status(200).end();
   }
 
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
+  // Rejet des autres méthodes
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Méthode non autorisée" });
   }
+
 
   try {
     const { identifiant, motdepasse } = req.body;

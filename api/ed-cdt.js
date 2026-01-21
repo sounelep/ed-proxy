@@ -1,20 +1,11 @@
+import cors from "./cors.js";
+
 export default async function handler(req, res) {
-  // CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  if (cors(req, res)) return;
 
-  // Réponse à la requête préliminaire OPTIONS
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  // Rejet des autres méthodes
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Méthode non autorisée" });
   }
-
-
 
   try {
     const { token, idEleve, dateDebut, dateFin } = req.body;
@@ -24,14 +15,7 @@ export default async function handler(req, res) {
     }
 
     const body = new URLSearchParams();
-    body.append(
-      "data",
-      JSON.stringify({
-        token,
-        dateDebut,
-        dateFin
-      })
-    );
+    body.append("data", JSON.stringify({ token, dateDebut, dateFin }));
 
     const response = await fetch(
       `https://api.ecoledirecte.com/v3/Eleves/${idEleve}/cahierdetexte.awp`,

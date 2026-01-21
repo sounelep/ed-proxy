@@ -1,15 +1,8 @@
+import cors from "./cors.js";
+
 export default async function handler(req, res) {
-  // CORS headers pour toutes les requêtes
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  if (cors(req, res)) return;
 
-  // Réponse à la requête préliminaire OPTIONS
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
-
-  // Rejet des autres méthodes
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Méthode non autorisée" });
   }
